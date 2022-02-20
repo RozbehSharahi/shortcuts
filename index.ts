@@ -1,20 +1,16 @@
 type Callback = () => void;
 type Handler = (e: KeyboardEvent) => void;
 
-export const shortCuts = new (class Shortcuts {
+export const shortCutter = new (class ShortCutter {
   private listeners: { [key: string]: Handler } = {};
 
-  register(
-    identifier: string,
-    shortCutDescription: string,
-    callback: Callback
-  ): this {
+  register(identifier: string, cut: string, callback: Callback): this {
     this.unregister(identifier);
 
-    const shortCut = Shortcuts.getShortCut(shortCutDescription);
+    const shortCut = ShortCutter.getShortCut(cut);
 
     this.listeners[identifier] = (e) => {
-      if (shortCut.ctrl !== Shortcuts.isCtrlKeyEvent(e)) return;
+      if (shortCut.ctrl !== ShortCutter.isCtrlKeyEvent(e)) return;
       if (shortCut.key !== e.key) return;
 
       e.preventDefault();
@@ -27,17 +23,18 @@ export const shortCuts = new (class Shortcuts {
   }
 
   unregister(identifier: string): this {
+    if (!this.listeners[identifier]) return this;
     document.removeEventListener("keydown", this.listeners[identifier]);
     return this;
   }
 
-  private static getShortCut(shortCutDescription: string) {
+  private static getShortCut(cut: string) {
     let ctrl = false;
-    let key = shortCutDescription;
+    let key = cut;
 
-    if (shortCutDescription.match(/^ctrl+/)) {
+    if (cut.match(/^ctrl+/)) {
       ctrl = true;
-      key = shortCutDescription.split("+")[1];
+      key = cut.split("+")[1];
     }
 
     return {

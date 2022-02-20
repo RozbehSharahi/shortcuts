@@ -1,7 +1,5 @@
 # shortcuts
 
-My personal shortcut library.
-
 This package provides two main services:
 
 - Register and unregister short cuts
@@ -10,15 +8,17 @@ This package provides two main services:
 ## Register & unregister short cuts
 
 ```ts
-import {shortCutter} from "@rozbehsharahi/shortcuts";
+import {ShortCut, shortCutter} from "@rozbehsharahi/shortcuts";
 
-shortCutter.register('my-control-save', 'ctrl+s', () => alert('hey'))
+// set a short cut
+shortCutter.register('my-control-save', new ShortCut({
+    ctrl: true,
+    key: s,
+    action: () => alert('wooohooo')
+}))
+
+// Use name to unset
 shortCutter.unregister('my-control-save')
-
-// or
-
-shortCutter.register('my-q', 'q', () => alert('you pressed q'))
-shortCutter.unregister('my-q', 'q', () => alert('you pressed q'))
 ```
 
 ## Register & unregister packs
@@ -26,25 +26,28 @@ shortCutter.unregister('my-q', 'q', () => alert('you pressed q'))
 In fact, we work here with stacks, and it should rather be called: Push & pop shortcut packs.
 
 Scenario: Imagine you have an app for todos. The tool is only accessible via Login and you want to provide a shortcut
-via Escape key to log out. While this sound straightforward imagine you have also a plus button for adding a new todo.
-When clicking that log button a modal pops up. Though here you don't want Esc to stand for "Log out" you want it rather
-to be the shortcut for canceling the modal.
+via Escape key to log out. While this sounds straightforward, imagine you have also a plus button for adding a new todo.
+When clicking that plus button a modal pops up. Here you no longer want Esc to stand for "Log out" you want it rather to
+be the shortcut for canceling the modal. But after closing the modal you want to go back to your default escape shortcut
+again.
 
-This scenario made me create the short cut packs, where every modal, component, view can stack a entire new pack of
-shortcuts, which can be simply remove again via popping.
+This scenario made me create the shortcut packs, where every modal, component, view can stack an entire new pack of
+shortcuts, which can be simply removed again.
 
 ```ts
 import {ShortCut, shortPacker} from "@rozbehsharahi/shortcuts";
 
 shortPacker.push([
-    {
-        label: 'My Escape in Todo List view',
-        shortCut: new ShortCut({key: 'Escape'}),
-        method: logout()
-    }
+    new ShortCut({
+        label: 'My escape in Todo-List-View',
+        key: 'Escape',
+        action: () => save()
+    })
 ])
 
-// some code to open a modal for adding new todo
+// ... some code to open a modal for adding new item
+
+// Will replace the whole last pack temporarily
 shortPacker.push([
     {
         label: 'My Escape in Add new Todo view',
@@ -53,10 +56,8 @@ shortPacker.push([
     }
 ])
 
-// after save of your new todo you can call pop to jump to the pack before
+// In order to jump back to the initial shortcuts just pop the pack
 shortPacker.pop(); // now the first pack with Esc to logout is active again. :)
-
-
 ```
 
 ## Know issues

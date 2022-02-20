@@ -1,28 +1,22 @@
 import { ShortCut } from "./short-cut";
 
-type Pack = {
-  shortCut: ShortCut;
-  label: string;
-  method: () => void;
-}[];
-
 export const shortPacker = new (class ShortPacker {
-  private packs: Pack[] = [];
+  private packs: ShortCut[][] = [];
 
   constructor() {
     document.addEventListener("keydown", (e) => this.handler(e));
   }
 
-  getCurrent(): Pack {
+  getCurrentPack(): ShortCut[] {
     return this.packs.slice().reverse()[0] || [];
   }
 
-  set(pack: Pack): this {
+  set(pack: ShortCut[]): this {
     this.packs = [pack];
     return this;
   }
 
-  push(pack: Pack): this {
+  push(pack: ShortCut[]): this {
     this.packs.push(pack);
     return this;
   }
@@ -33,20 +27,13 @@ export const shortPacker = new (class ShortPacker {
   }
 
   private handler(e: KeyboardEvent): void {
-    for (const cut of this.getCurrent()) {
-      if (
-        cut.shortCut.isCtrl() === ShortPacker.isCtrlEvent(e) &&
-        cut.shortCut.getKey() === e.key
-      ) {
+    for (const shortCut of this.getCurrentPack()) {
+      if (shortCut.match(e)) {
         e.preventDefault();
-        cut.method();
+        shortCut.callAction();
         return;
       }
     }
     return;
-  }
-
-  private static isCtrlEvent(e: KeyboardEvent): boolean {
-    return window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey;
   }
 })();

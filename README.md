@@ -37,6 +37,7 @@ shortcuts, which can be simply removed again.
 ```ts
 import {ShortCut, shortPacker} from "@rozbehsharahi/shortcuts";
 
+// Set shortcuts
 shortPacker.push([
     new ShortCut({
         label: 'My escape in Todo-List-View',
@@ -45,19 +46,17 @@ shortPacker.push([
     })
 ])
 
-// ... some code to open a modal for adding new item
-
-// Will replace the whole last pack temporarily
+// Temporarily replace shortcuts
 shortPacker.push([
-    {
-        label: 'My Escape in Add new Todo view',
-        shortCut: new ShortCut({key: 'Escape'}),
-        method: closeAddNewTodoView()
-    }
+    new ShortCut({
+        label: 'My escape in Todo-Add-View',
+        key: 'Escape',
+        action: () => cancel()
+    })
 ])
 
-// In order to jump back to the initial shortcuts just pop the pack
-shortPacker.pop(); // now the first pack with Esc to logout is active again. :)
+// Jump back to initial shortcuts
+shortPacker.pop();
 ```
 
 ## Know issues

@@ -16,8 +16,13 @@ export const shortPacker = new (class ShortPacker {
     return this;
   }
 
-  push(pack: ShortCut[]): this {
-    this.packs.push(pack);
+  push(pack: ShortCut[], inherit = false): this {
+    if (!inherit) {
+      this.packs.push(pack);
+      return this;
+    }
+
+    this.packs.push([...this.getCurrentPack(), ...pack]);
     return this;
   }
 
@@ -27,7 +32,7 @@ export const shortPacker = new (class ShortPacker {
   }
 
   private handler(e: KeyboardEvent): void {
-    for (const shortCut of this.getCurrentPack()) {
+    for (const shortCut of this.getCurrentPack().slice().reverse()) {
       if (shortCut.match(e)) {
         e.preventDefault();
         shortCut.callAction();

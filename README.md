@@ -59,6 +59,15 @@ shortPacker.push([
 shortPacker.pop();
 ```
 
+## Publishing
+
+- Program
+- Commit changes
+- Update npm package version
+- Commit
+- Push
+- Create release
+
 ## Know issues
 
 - Written in TypeScript. You need a tool like webpack, vue-cli or whatever to make this package accessible for yourself.

@@ -1,8 +1,11 @@
 {
   "name": "@rozbehsharahi/shortcuts",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "main": "index.js",
   "author": "Rozbeh Chiryai Sharahi <rozbeh.sharahi@gmail.com>",
-  "repository": "git@github.com:RozbehSharahi/shortcuts.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RozbehSharahi/shortcuts.git"
+  },
   "license": "MIT"
 }
